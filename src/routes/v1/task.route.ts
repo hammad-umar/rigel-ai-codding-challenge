@@ -7,5 +7,11 @@ import { taskValidation } from '../../validations'
 const router = express.Router()
 
 router.post('/', auth(), validate(taskValidation.create), taskController.create)
+router.get(
+  '/',
+  auth(),
+  validate(taskValidation.getAllWithPagination),
+  taskController.findAll
+)
 
 export default router

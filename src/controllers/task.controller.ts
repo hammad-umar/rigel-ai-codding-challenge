@@ -11,6 +11,20 @@ const create = catchAsync(async (req, res) => {
   res.status(httpStatus.CREATED).json({ task: createdTask })
 })
 
+const findAll = catchAsync(async (req, res) => {
+  const user = req.user as User
+  const { page, limit } = req.query
+
+  const { items, meta } = await taskService.getAllWithPagination(
+    Number(page),
+    Number(limit),
+    user.id
+  )
+
+  res.status(httpStatus.OK).json({ items, meta })
+})
+
 export default {
   create,
+  findAll,
 }

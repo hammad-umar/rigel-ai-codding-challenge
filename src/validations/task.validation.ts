@@ -7,6 +7,14 @@ const create = {
   }),
 }
 
+const getAllWithPagination = {
+  query: Joi.object().keys({
+    page: Joi.string().required(),
+    limit: Joi.string().required(),
+  }),
+}
+
 export default {
   create,
+  getAllWithPagination,
 }
