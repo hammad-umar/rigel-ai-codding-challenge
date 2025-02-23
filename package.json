@@ -5,7 +5,13 @@
   "author": "Hammad Umar <hammadhawc227@gmail.com>",
   "license": "MIT",
   "scripts": {
+    "build": "rimraf build && tsc -p tsconfig.json",
+    "start": "yarn build && pm2 start ecosystem.config.json --no-daemon",
     "dev": "cross-env NODE_ENV=development nodemon src/index.ts",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "prettier": "prettier --check **/*.ts",
+    "prettier:fix": "prettier --write **/*.ts",
     "db:migrate": "prisma migrate dev"
   },
   "devDependencies": {
@@ -14,8 +20,16 @@
     "@types/node": "^22.13.5",
     "@types/passport": "^1.0.17",
     "@types/passport-jwt": "^4.0.1",
+    "@types/swagger-jsdoc": "^6.0.4",
+    "@types/swagger-ui-express": "^4.1.8",
+    "@typescript-eslint/eslint-plugin": "5.46.1",
+    "@typescript-eslint/parser": "5.46.1",
     "cross-env": "^7.0.3",
+    "eslint": "8.29.0",
+    "eslint-config-prettier": "8.5.0",
+    "eslint-plugin-prettier": "4.2.1",
     "nodemon": "^3.1.9",
+    "prettier": "2.8.1",
     "prisma": "^6.4.1",
     "ts-node": "^10.9.2",
     "typescript": "^5.7.3"
@@ -32,6 +46,10 @@
     "moment": "^2.30.1",
     "passport": "^0.7.0",
     "passport-jwt": "^4.0.1",
+    "pm2": "^5.4.3",
+    "rimraf": "^6.0.1",
+    "swagger-jsdoc": "^6.2.8",
+    "swagger-ui-express": "^5.0.1",
     "winston": "^3.17.0"
   }
 }

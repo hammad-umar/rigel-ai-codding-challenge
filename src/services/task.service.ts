@@ -1,10 +1,10 @@
-import { Task } from '@prisma/client'
-import prisma from '../client'
+import { Task } from '@prisma/client';
+import prisma from '../client';
 import {
   constructPaginationMeta,
   getPaginationOptions,
-} from '../utils/pagination'
-import { Meta } from '../types'
+} from '../utils/pagination';
+import { Meta } from '../types';
 
 /**
  * Create a task
@@ -14,7 +14,7 @@ import { Meta } from '../types'
 const createTask = async (
   userId: number,
   title: string,
-  description?: string
+  description?: string,
 ): Promise<Task> => {
   return prisma.task.create({
     data: {
@@ -22,8 +22,8 @@ const createTask = async (
       description,
       userId,
     },
-  })
-}
+  });
+};
 
 /**
  * Get tasks with pagination
@@ -33,23 +33,23 @@ const createTask = async (
 const getAllWithPagination = async (
   page: number,
   limit: number,
-  userId: number
+  userId: number,
 ): Promise<{ items: Task[]; meta: Meta }> => {
-  const totalCount = await prisma.task.count()
-  const paginationOptions = getPaginationOptions(page, limit)
+  const totalCount = await prisma.task.count();
+  const paginationOptions = getPaginationOptions(page, limit);
 
   const tasks = await prisma.task.findMany({
     ...paginationOptions,
     where: {
       userId,
     },
-  })
+  });
 
-  const meta = constructPaginationMeta(page, limit, totalCount)
-  return { items: tasks, meta }
-}
+  const meta = constructPaginationMeta(page, limit, totalCount);
+  return { items: tasks, meta };
+};
 
 export default {
   createTask,
   getAllWithPagination,
-}
+};

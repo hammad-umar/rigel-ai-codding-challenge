@@ -1,9 +1,9 @@
-import jwt from 'jsonwebtoken'
-import moment, { Moment } from 'moment'
-import config from '../config/config'
-import { Token, TokenType } from '@prisma/client'
-import prisma from '../client'
-import { AuthTokensResponse } from '../types'
+import jwt from 'jsonwebtoken';
+import moment, { Moment } from 'moment';
+import config from '../config/config';
+import { Token, TokenType } from '@prisma/client';
+import prisma from '../client';
+import { AuthTokensResponse } from '../types';
 
 /**
  * Generate token
@@ -17,17 +17,17 @@ const generateToken = (
   userId: number,
   expires: Moment,
   type: TokenType,
-  secret = config.jwt.secret
+  secret = config.jwt.secret,
 ): string => {
   const payload = {
     sub: userId,
     iat: moment().unix(),
     exp: expires.unix(),
     type,
-  }
+  };
 
-  return jwt.sign(payload, secret)
-}
+  return jwt.sign(payload, secret);
+};
 
 /**
  * Save a token
@@ -43,7 +43,7 @@ const saveToken = async (
   userId: number,
   expires: Moment,
   type: TokenType,
-  blacklisted = false
+  blacklisted = false,
 ): Promise<Token> => {
   const createdToken = await prisma.token.create({
     data: {
@@ -53,10 +53,10 @@ const saveToken = async (
       type,
       blacklisted,
     },
-  })
+  });
 
-  return createdToken
-}
+  return createdToken;
+};
 
 /**
  * Verify token and return token obj (or throw an error if it is not valid)
@@ -65,8 +65,8 @@ const saveToken = async (
  * @returns {Promise<Token>}
  */
 const verifyToken = async (token: string, type: TokenType): Promise<Token> => {
-  const payload = jwt.verify(token, config.jwt.secret)
-  const userId = Number(payload.sub)
+  const payload = jwt.verify(token, config.jwt.secret);
+  const userId = Number(payload.sub);
   const tokenData = await prisma.token.findFirst({
     where: {
       token,
@@ -74,14 +74,14 @@ const verifyToken = async (token: string, type: TokenType): Promise<Token> => {
       userId,
       blacklisted: false,
     },
-  })
+  });
 
   if (!tokenData) {
-    throw new Error('Token not found')
+    throw new Error('Token not found');
   }
 
-  return tokenData
-}
+  return tokenData;
+};
 
 /**
  * Generate auth tokens
@@ -89,31 +89,36 @@ const verifyToken = async (token: string, type: TokenType): Promise<Token> => {
  * @returns {Promise<AuthTokensResponse>}
  */
 const generateAuthTokens = async (user: {
-  id: number
+  id: number;
 }): Promise<AuthTokensResponse> => {
   const accessTokenExpires = moment().add(
     config.jwt.accessExpirationMinutes,
-    'minutes'
-  )
+    'minutes',
+  );
 
   const accessToken = generateToken(
     user.id,
     accessTokenExpires,
-    TokenType.ACCESS
-  )
+    TokenType.ACCESS,
+  );
 
   const refreshTokenExpires = moment().add(
     config.jwt.refreshExpirationDays,
-    'days'
-  )
+    'days',
+  );
 
   const refreshToken = generateToken(
     user.id,
     refreshTokenExpires,
-    TokenType.REFRESH
-  )
+    TokenType.REFRESH,
+  );
 
-  await saveToken(refreshToken, user.id, refreshTokenExpires, TokenType.REFRESH)
+  await saveToken(
+    refreshToken,
+    user.id,
+    refreshTokenExpires,
+    TokenType.REFRESH,
+  );
 
   return {
     access: {
@@ -124,12 +129,12 @@ const generateAuthTokens = async (user: {
       token: refreshToken,
       expires: refreshTokenExpires.toDate(),
     },
-  }
-}
+  };
+};
 
 export default {
   generateToken,
   saveToken,
   verifyToken,
   generateAuthTokens,
-}
+};

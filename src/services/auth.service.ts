@@ -1,12 +1,12 @@
-import httpStatus from 'http-status'
-import tokenService from './token.service'
-import userService from './user.service'
-import ApiError from '../utils/ApiError'
-import { TokenType, User } from '@prisma/client'
-import prisma from '../client'
-import { isPasswordMatch } from '../utils/encryption'
-import exclude from '../utils/exclude'
-import { AuthTokensResponse } from '../types'
+import httpStatus from 'http-status';
+import tokenService from './token.service';
+import userService from './user.service';
+import ApiError from '../utils/ApiError';
+import { TokenType, User } from '@prisma/client';
+import prisma from '../client';
+import { isPasswordMatch } from '../utils/encryption';
+import exclude from '../utils/exclude';
+import { AuthTokensResponse } from '../types';
 
 /**
  * Login with username and password
@@ -16,7 +16,7 @@ import { AuthTokensResponse } from '../types'
  */
 const loginUserWithEmailAndPassword = async (
   email: string,
-  password: string
+  password: string,
 ): Promise<Omit<User, 'password'>> => {
   const user = await userService.getUserByEmail(email, [
     'id',
@@ -27,14 +27,14 @@ const loginUserWithEmailAndPassword = async (
     'isEmailVerified',
     'createdAt',
     'updatedAt',
-  ])
+  ]);
 
   if (!user || !(await isPasswordMatch(password, user.password as string))) {
-    throw new ApiError(httpStatus.UNAUTHORIZED, 'Incorrect email or password')
+    throw new ApiError(httpStatus.UNAUTHORIZED, 'Incorrect email or password');
   }
 
-  return exclude(user, ['password'])
-}
+  return exclude(user, ['password']);
+};
 
 /**
  * Logout
@@ -48,14 +48,14 @@ const logout = async (refreshToken: string): Promise<void> => {
       type: TokenType.REFRESH,
       blacklisted: false,
     },
-  })
+  });
 
   if (!refreshTokenData) {
-    throw new ApiError(httpStatus.NOT_FOUND, 'Not found')
+    throw new ApiError(httpStatus.NOT_FOUND, 'Not found');
   }
 
-  await prisma.token.delete({ where: { id: refreshTokenData.id } })
-}
+  await prisma.token.delete({ where: { id: refreshTokenData.id } });
+};
 
 /**
  * Refresh auth tokens
@@ -63,25 +63,25 @@ const logout = async (refreshToken: string): Promise<void> => {
  * @returns {Promise<AuthTokensResponse>}
  */
 const refreshAuth = async (
-  refreshToken: string
+  refreshToken: string,
 ): Promise<AuthTokensResponse> => {
   try {
     const refreshTokenData = await tokenService.verifyToken(
       refreshToken,
-      TokenType.REFRESH
-    )
+      TokenType.REFRESH,
+    );
 
-    const { userId } = refreshTokenData
-    await prisma.token.delete({ where: { id: refreshTokenData.id } })
+    const { userId } = refreshTokenData;
+    await prisma.token.delete({ where: { id: refreshTokenData.id } });
 
-    return tokenService.generateAuthTokens({ id: userId })
+    return tokenService.generateAuthTokens({ id: userId });
   } catch (error) {
-    throw new ApiError(httpStatus.UNAUTHORIZED, 'Please authenticate')
+    throw new ApiError(httpStatus.UNAUTHORIZED, 'Please authenticate');
   }
-}
+};
 
 export default {
   loginUserWithEmailAndPassword,
   logout,
   refreshAuth,
-}
+};

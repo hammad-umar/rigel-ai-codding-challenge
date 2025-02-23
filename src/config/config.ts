@@ -1,8 +1,8 @@
-import dotenv from 'dotenv'
-import path from 'path'
-import Joi from 'joi'
+import dotenv from 'dotenv';
+import path from 'path';
+import Joi from 'joi';
 
-dotenv.config({ path: path.join(process.cwd(), '.env') })
+dotenv.config({ path: path.join(process.cwd(), '.env') });
 
 const envVarsSchema = Joi.object()
   .keys({
@@ -19,14 +19,14 @@ const envVarsSchema = Joi.object()
       .default(30)
       .description('days after which refresh tokens expire'),
   })
-  .unknown()
+  .unknown();
 
 const { value: envVars, error } = envVarsSchema
   .prefs({ errors: { label: 'key' } })
-  .validate(process.env)
+  .validate(process.env);
 
 if (error) {
-  throw new Error(`Config validation error: ${error.message}`)
+  throw new Error(`Config validation error: ${error.message}`);
 }
 
 export default {
@@ -38,4 +38,4 @@ export default {
     accessExpirationMinutes: envVars.JWT_ACCESS_EXPIRATION_MINUTES,
     refreshExpirationDays: envVars.JWT_REFRESH_EXPIRATION_DAYS,
   },
-}
+};

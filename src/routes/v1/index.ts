@@ -1,9 +1,9 @@
-import express from 'express'
-import userRoutes from './user.route'
-import authRoutes from './auth.route'
-import taskRoutes from './task.route'
+import express from 'express';
+import userRoutes from './user.route';
+import authRoutes from './auth.route';
+import taskRoutes from './task.route';
 
-const router = express.Router()
+const router = express.Router();
 
 const defaultRoutes = [
   {
@@ -18,10 +18,10 @@ const defaultRoutes = [
     path: '/tasks',
     route: taskRoutes,
   },
-]
+];
 
 defaultRoutes.forEach((route) => {
-  router.use(route.path, route.route)
-})
+  router.use(route.path, route.route);
+});
 
-export default router
+export default router;

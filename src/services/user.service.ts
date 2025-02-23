@@ -1,6 +1,6 @@
-import { User, Role } from '@prisma/client'
-import prisma from '../client'
-import { encryptPassword } from '../utils/encryption'
+import { User } from '@prisma/client';
+import prisma from '../client';
+import { encryptPassword } from '../utils/encryption';
 
 /**
  * Create a user
@@ -10,7 +10,7 @@ import { encryptPassword } from '../utils/encryption'
 const createUser = async (
   email: string,
   password: string,
-  name?: string
+  name?: string,
 ): Promise<User> => {
   return prisma.user.create({
     data: {
@@ -18,8 +18,8 @@ const createUser = async (
       email,
       password: await encryptPassword(password),
     },
-  })
-}
+  });
+};
 
 /**
  * Get user by id
@@ -38,13 +38,13 @@ const getUserById = async <Key extends keyof User>(
     'isEmailVerified',
     'createdAt',
     'updatedAt',
-  ] as Key[]
+  ] as Key[],
 ): Promise<Pick<User, Key> | null> => {
   return prisma.user.findUnique({
     where: { id },
     select: keys.reduce((obj, k) => ({ ...obj, [k]: true }), {}),
-  }) as Promise<Pick<User, Key> | null>
-}
+  }) as Promise<Pick<User, Key> | null>;
+};
 
 /**
  * Get user by email
@@ -63,16 +63,16 @@ const getUserByEmail = async <Key extends keyof User>(
     'isEmailVerified',
     'createdAt',
     'updatedAt',
-  ] as Key[]
+  ] as Key[],
 ): Promise<Pick<User, Key> | null> => {
   return prisma.user.findUnique({
     where: { email },
     select: keys.reduce((obj, k) => ({ ...obj, [k]: true }), {}),
-  }) as Promise<Pick<User, Key> | null>
-}
+  }) as Promise<Pick<User, Key> | null>;
+};
 
 export default {
   createUser,
   getUserById,
   getUserByEmail,
-}
+};
