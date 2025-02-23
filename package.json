@@ -5,9 +5,9 @@
   "author": "Hammad Umar <hammadhawc227@gmail.com>",
   "license": "MIT",
   "scripts": {
-    "build": "rimraf build && tsc -p tsconfig.json",
-    "start": "yarn build && pm2 start ecosystem.config.json --no-daemon",
-    "dev": "cross-env NODE_ENV=development nodemon src/index.ts",
+    "build": "node api.js && rimraf build && tsc -p tsconfig.json",
+    "start": "node api.js && yarn build && pm2 start ecosystem.config.json --no-daemon",
+    "dev": "node api.js && cross-env NODE_ENV=development nodemon src/index.ts",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "prettier": "prettier --check **/*.ts",
