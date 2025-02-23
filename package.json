@@ -5,7 +5,8 @@
   "author": "Hammad Umar <hammadhawc227@gmail.com>",
   "license": "MIT",
   "scripts": {
-    "dev": "cross-env NODE_ENV=development nodemon src/index.ts"
+    "dev": "cross-env NODE_ENV=development nodemon src/index.ts",
+    "db:migrate": "prisma migrate dev"
   },
   "devDependencies": {
     "@types/bcryptjs": "^2.4.6",

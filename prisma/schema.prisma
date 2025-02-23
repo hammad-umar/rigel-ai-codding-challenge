@@ -17,6 +17,7 @@ model User {
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
   Token           Token[]
+  Task            Task[]
 }
 
 model Token {
@@ -28,6 +29,16 @@ model Token {
   userId      Int
   user        User      @relation(fields: [userId], references: [id])
   createdAt   DateTime  @default(now())
+}
+
+model Task {
+  id          Int      @id @default(autoincrement())
+  title       String
+  description String?
+  userId      Int
+  user        User     @relation(fields: [userId], references: [id])
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 }
 
 enum Role {
