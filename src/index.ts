@@ -1,11 +1,15 @@
 import { Server } from 'http'
 import app from './app'
+import prisma from './client'
 
 let server: Server
 const port = 3000
 
-server = app.listen(port, () => {
-  console.log(`Server is up and running on port:${port}`)
+prisma.$connect().then(() => {
+  console.log('Connected to PostgreSQL Database')
+  server = app.listen(port, () => {
+    console.log(`Server is up on port:${port}`)
+  })
 })
 
 const exitHandler = () => {
