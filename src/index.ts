@@ -1,21 +1,22 @@
 import { Server } from 'http'
 import app from './app'
 import prisma from './client'
+import config from './config/config'
+import logger from './config/logger'
 
 let server: Server
-const port = 3000
 
 prisma.$connect().then(() => {
-  console.log('Connected to PostgreSQL Database')
-  server = app.listen(port, () => {
-    console.log(`Server is up on port:${port}`)
+  logger.info('Connected to PostgreSQL Database')
+  server = app.listen(config.port, () => {
+    logger.info(`Server is up on port:${config.port}`)
   })
 })
 
 const exitHandler = () => {
   if (server) {
     server.close(() => {
-      console.log('Server closed')
+      console.info('Server closed')
       process.exit(1)
     })
   } else {
@@ -24,7 +25,7 @@ const exitHandler = () => {
 }
 
 const unexpectedErrorHandler = (error: unknown) => {
-  console.error(error)
+  logger.error(error)
   exitHandler()
 }
 
@@ -32,7 +33,7 @@ process.on('uncaughtException', unexpectedErrorHandler)
 process.on('unhandledRejection', unexpectedErrorHandler)
 
 process.on('SIGTERM', () => {
-  console.log('SIGTERM received')
+  logger.info('SIGTERM received')
   if (server) {
     server.close()
   }

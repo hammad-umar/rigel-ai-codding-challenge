@@ -5,7 +5,7 @@
   "author": "Hammad Umar <hammadhawc227@gmail.com>",
   "license": "MIT",
   "scripts": {
-    "dev": "nodemon src/index.ts"
+    "dev": "cross-env NODE_ENV=development nodemon src/index.ts"
   },
   "devDependencies": {
     "@types/bcryptjs": "^2.4.6",
