@@ -6,10 +6,6 @@ import validate from '../../middlewares/validate'
 const router = express.Router()
 
 router
-  .route('/')
-  .post(validate(userValidation.createUser), userController.createUser)
-
-router
   .route('/:userId')
   .get(validate(userValidation.getUser), userController.getUser)
 
