@@ -2,10 +2,15 @@ import express from 'express';
 import userRoutes from './user.route';
 import authRoutes from './auth.route';
 import taskRoutes from './task.route';
+import docsRoute from './docs.route';
 
 const router = express.Router();
 
 const defaultRoutes = [
+  {
+    path: '/docs',
+    route: docsRoute,
+  },
   {
     path: '/auth',
     route: authRoutes,
